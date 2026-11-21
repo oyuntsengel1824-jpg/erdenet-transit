@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="mn"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Эрдэнэт Автобус</title>
+<style>
+:root{--bg:#fff8ee;--card:#fff;--ink:#2b2a33;--mut:#7a7686;--pri:#ff8a3d;--blu:#2f80ed;--grn:#27ae60;--line:#f0e4d2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2a2230;--card:#372d3f;--ink:#fbf1e4;--mut:#bfb2c8;--line:#4a3d54}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,"Segoe UI",Arial,sans-serif}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;display:flex;gap:6px;align-items:center;padding:10px 14px;background:var(--card);border-bottom:1px solid var(--line);overflow-x:auto}
+nav b{margin-right:auto;white-space:nowrap}nav a{color:var(--ink);text-decoration:none;padding:6px 12px;border-radius:99px;white-space:nowrap;font-size:14px}nav a:hover{background:var(--pri);color:#fff}
+section{max-width:1080px;margin:0 auto;padding:28px 14px}h2{margin:0 0 14px;font-size:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px}
+.hero svg{width:100%;height:auto;display:block;border-radius:0 0 28px 28px}
+.hero h1{position:absolute;left:5%;top:8%;margin:0;font-size:clamp(24px,5vw,48px);color:#fff;text-shadow:0 2px 8px #0003}
+.hero{position:relative}
+.bus{animation:drive 16s linear infinite}.wheel{transform-box:fill-box;transform-origin:center;animation:spin 1s linear infinite}
+.cl{animation:drift 60s linear infinite}.cl2{animation-duration:90s}
+@keyframes drive{from{transform:translateX(-300px)}to{transform:translateX(1300px)}}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes drift{from{transform:translateX(-200px)}to{transform:translateX(1300px)}}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.chip{border:2px solid var(--line);background:var(--card);color:var(--ink);padding:6px 12px;border-radius:99px;cursor:pointer;font-size:14px}.chip.on{border-color:var(--pri);background:var(--pri);color:#fff}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+#map{width:100%;height:auto;background:#e9f3df;border-radius:18px;border:1px solid var(--line);cursor:crosshair}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+button,input,select{font:inherit;color:var(--ink)}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:12px;padding:8px 14px;cursor:pointer}.btn.g{background:var(--grn)}.btn.o{background:transparent;color:var(--ink);border:1px solid var(--line)}
+input,select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:7px 10px;max-width:100%}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0}
+.mut{color:var(--mut);font-size:13px}.tag{display:inline-block;background:var(--bg);border-radius:99px;padding:2px 10px;margin:2px;font-size:13px}
+.ok{color:var(--grn);font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:760px){.two{grid-template-columns:1fr}}
+.it input[type=text]{flex:1;min-width:120px}
+.msgs{max-height:100px;overflow:auto;font-size:13px;margin:6px 0}
+</style></head><body>
+<nav><b>🚌 Эрдэнэт Автобус</b><a href="#map-s">Газрын зураг</a><a href="#routes">Чиглэл</a><a href="#kids">Хүүхэд</a><a href="#plan">Төлөвлөгөө</a><a href="#taxi">Хамт такси</a></nav>
+
+<div class="hero">
+<svg viewBox="0 0 1200 420" aria-hidden="true">
+<defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb36b"/><stop offset="1" stop-color="#ffe9c7"/></linearGradient></defs>
+<rect width="1200" height="420" fill="url(#sk)"/><circle cx="980" cy="120" r="50" fill="#fff3b0"/>
+<g class="cl"><ellipse cx="200" cy="90" rx="60" ry="18" fill="#fff"/><ellipse cx="240" cy="78" rx="40" ry="16" fill="#fff"/></g>
+<g class="cl cl2"><ellipse cx="500" cy="140" rx="55" ry="15" fill="#fff"/><ellipse cx="535" cy="128" rx="35" ry="14" fill="#fff"/></g>
+<path d="M0 300 Q200 200 420 280 T820 270 T1200 260 V420 H0Z" fill="#9ccc65"/>
+<path d="M0 320 Q300 250 600 310 T1200 300 V420 H0Z" fill="#7cb342"/>
+<g fill="#d9d2c5"><rect x="640" y="190" width="60" height="120"/><rect x="710" y="150" width="70" height="160"/><rect x="790" y="210" width="60" height="100"/><rect x="860" y="170" width="70" height="140"/></g>
+<g fill="#fff9"><rect x="650" y="205" width="12" height="12"/><rect x="672" y="205" width="12" height="12"/><rect x="722" y="170" width="12" height="12"/><rect x="750" y="170" width="12" height="12"/><rect x="872" y="190" width="12" height="12"/><rect x="900" y="190" width="12" height="12"/></g>
+<g><g transform="translate(90,265)"><polygon points="0,45 60,45 30,0" fill="#f5efe0"/><rect x="0" y="45" width="60" height="25" fill="#f5efe0"/><circle cx="30" cy="-2" r="4" fill="#d9534f"/><rect x="24" y="48" width="12" height="22" fill="#2f80ed"/></g>
+<g transform="translate(200,275)"><polygon points="0,38 50,38 25,0" fill="#fff"/><rect y="38" width="50" height="22" fill="#fff"/><rect x="20" y="40" width="10" height="20" fill="#ff8a3d"/></g>
+<g transform="translate(300,270)"><polygon points="0,40 55,40 28,0" fill="#f5efe0"/><rect y="40" width="55" height="24" fill="#f5efe0"/><rect x="22" y="42" width="10" height="22" fill="#27ae60"/></g>
+<path d="M60 340V300h320v40" fill="none" stroke="#8d6e63" stroke-width="3" stroke-dasharray="4 4"/></g>
+<rect y="345" width="1200" height="60" fill="#5d5a66"/><path d="M0 375H1200" stroke="#fff" stroke-width="4" stroke-dasharray="30 24"/>
+<g class="bus"><g transform="translate(0,305)"><rect width="180" height="62" rx="12" fill="#2f80ed"/><rect x="10" y="10" width="26" height="22" rx="4" fill="#cfe7ff"/><rect x="42" y="10" width="26" height="22" rx="4" fill="#cfe7ff"/><rect x="74" y="10" width="26" height="22" rx="4" fill="#cfe7ff"/><rect x="106" y="10" width="26" height="22" rx="4" fill="#cfe7ff"/><rect x="140" y="10" width="30" height="36" rx="4" fill="#cfe7ff"/><rect y="40" width="180" height="6" fill="#ff8a3d"/>
+<circle class="wheel" cx="40" cy="64" r="12" fill="#333"/><circle class="wheel" cx="140" cy="64" r="12" fill="#333"/><circle cx="40" cy="64" r="4" fill="#ccc"/><circle cx="140" cy="64" r="4" fill="#ccc"/></g></g>
+</svg><h1>Эрдэнэт · Хотын амьдрал</h1></div>
+
+<section id="map-s"><h2>Автобус хаана явна?</h2>
+<div class="chips" id="rchips"></div>
+<svg id="map" viewBox="0 0 800 460"></svg>
+<div class="row"><button class="btn" id="loc">📍 Миний байршил</button><span class="mut" id="nearest">Газрын зураг дээр дарж байршлаа заана уу</span></div></section>
+
+<section id="routes"><h2>Чиглэлүүд</h2><div class="grid" id="rgrid"></div></section>
+
+<section id="kids"><h2>Хүүхэд хаана явна?</h2>
+<div class="card"><div class="row"><input id="kname" placeholder="Хүүхдийн нэр"><select id="kbus"></select><button class="btn g" id="kadd">+ Автобусанд суулаа</button></div>
+<div id="klist"></div></div></section>
+
+<section id="plan"><h2>Долоо хоногийн төлөвлөгөө</h2>
+<div class="chips" id="days"></div>
+<div class="card"><div id="items"></div><div class="row"><input type="time" id="pt" value="08:00"><input id="px" placeholder="Юу хийх вэ?"><button class="btn" id="padd">+ Нэмэх</button></div>
+<div class="mut">Өнгөрсөн өдрийг ч засах, устгах боломжтой.</div></div></section>
+
+<section id="taxi"><h2>Сурагчдын хамт такси</h2>
+<div class="two"><div class="card"><b>Шинэ бүлэг</b>
+<div class="row"><input id="tf" placeholder="Хаанаас"><input id="tt" placeholder="Хаашаа"></div>
+<div class="row"><input type="time" id="ttm" value="07:45"><select id="tc"><option>2</option><option>3</option><option selected>4</option></select><span class="mut">хүүхэд</span></div>
+<div class="row"><input id="tme" placeholder="Миний хүүхдийн нэр"><button class="btn" id="tadd">Үүсгэх</button></div>
+<div class="mut">2–4 хүүхэд цугларвал такси баталгаажна.</div></div>
+<div id="tlist"></div></div></section>
+
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},load=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+const R=[
+{id:'Ч:1-Ч:2',n:'Их залуу – Шанд',c:'#8bc34a',i:'10-15',m:25,p:[[60,90],[170,170],[260,230],[390,250],[520,300]]},
+{id:'Ч:3',n:'Баян тал',c:'#26c6da',i:'15',m:20,p:[[120,400],[210,330],[300,290],[420,250],[560,200]]},
+{id:'Ч:4',n:'Сагсай',c:'#9c27b0',i:'15-20',m:30,p:[[240,60],[300,130],[330,200],[430,240],[610,230]]},
+{id:'Ч:5',n:'Говил',c:'#ff4fd8',i:'12-15',m:35,p:[[700,60],[640,120],[560,170],[470,230],[360,330]]},
+{id:'Ч:6',n:'Тосгон – Пирамид – Зээл',c:'#ffb300',i:'10',m:20,p:[[740,140],[650,200],[560,230],[440,260],[320,300]]},
+{id:'Ч:7',n:'Вокзал – Төгөл',c:'#f2d600',i:'15',m:25,p:[[380,420],[420,340],[470,270],[540,210],[600,120]]},
+{id:'Ч:8',n:'Урд хабитат – Дэнж – Даниста',c:'#a1887f',i:'12',m:35,p:[[100,300],[200,280],[330,265],[470,260],[650,280]]},
+{id:'Ч:9',n:'Яргуйт – Автовокзал',c:'#e53935',i:'15',m:30,p:[[760,100],[690,180],[570,240],[450,320],[300,380]]}];
+const NS=document.createElementNS.bind(document,'http://www.w3.org/2000/svg');
+const map=$('#map');let filter=null,me=null,watch={};
+// background: ger district + city blocks
+map.innerHTML='<rect width="800" height="460" fill="#e9f3df"/><path d="M0 330Q200 300 330 380T800 360V460H0Z" fill="#dcead0"/><rect x="420" y="190" width="200" height="90" rx="14" fill="#f3e3c8" opacity=".7"/><text x="450" y="240" font-size="13" fill="#8a7a5a">ТӨВ</text><text x="90" y="250" font-size="12" fill="#8a7a5a">🏠 Гэр хороолол</text>';
+const paths=[],stops=[];
+R.forEach((r,ri)=>{const p=NS('path');p.setAttribute('d','M'+r.p.map(q=>q.join(',')).join(' L'));p.setAttribute('fill','none');p.setAttribute('stroke',r.c);p.setAttribute('stroke-width',5);p.setAttribute('stroke-linecap','round');p.setAttribute('opacity',.85);map.appendChild(p);r.el=p;r.len=p.getTotalLength();
+r.p.forEach((q,k)=>{const c=NS('circle');c.setAttribute('cx',q[0]);c.setAttribute('cy',q[1]);c.setAttribute('r',k==0||k==4?6:3.5);c.setAttribute('fill','#fff');c.setAttribute('stroke',r.c);c.setAttribute('stroke-width',2);r['s'+k]=c;map.appendChild(c)})});
+const B=[];let seq=0;
+R.forEach((r,ri)=>{for(let k=0;k<2;k++){const g=NS('g');g.style.cursor='pointer';g.innerHTML='<circle r="13" fill="'+r.c+'" stroke="#fff" stroke-width="3"/><text y="5" font-size="14" text-anchor="middle">🚌</text><text class="lb" y="-18" font-size="11" text-anchor="middle" font-weight="700" fill="#333"></text>';map.appendChild(g);
+const b={id:seq++,r,t:(k*.5+ri*.13)%1,d:1,sp:.018+Math.random()*.01,g,plate:(4000+Math.floor(Math.random()*5999))+' ОРО'};g.onclick=()=>{$('#kbus').value=b.id;document.getElementById('kids').scrollIntoView()};B.push(b)}});
+const kmark=NS('g');map.appendChild(kmark);
+const pin=NS('g');pin.innerHTML='<circle r="14" fill="#2f80ed" opacity=".25"><animate attributeName="r" values="8;22;8" dur="2s" repeatCount="indefinite"/></circle><circle r="7" fill="#2f80ed" stroke="#fff" stroke-width="3"/>';pin.style.display='none';map.appendChild(pin);
+function pos(b){const l=b.r.len*b.t;return b.r.el.getPointAtLength(l)}
+function eta(b){const rem=b.d>0?1-b.t:b.t;return Math.max(1,Math.round(rem*b.r.m))}
+let last=performance.now();
+function tick(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+B.forEach(b=>{b.t+=b.d*b.sp*dt;if(b.t>=1){b.t=1;b.d=-1}if(b.t<=0){b.t=0;b.d=1}
+const p=pos(b);b.g.setAttribute('transform','translate('+p.x+','+p.y+')');b.x=p.x;b.y=p.y;
+const vis=!filter||filter===b.r.id;b.g.style.display=vis?'':'none';b.g.querySelector('.lb').textContent=kids.some(k=>k.bus==b.id)?kids.filter(k=>k.bus==b.id).map(k=>k.name).join(', '):''});
+R.forEach(r=>{const v=!filter||filter===r.id;r.el.style.display=v?'':'none';for(let k=0;k<5;k++)r['s'+k].style.display=v?'':'none'});
+requestAnimationFrame(tick)}
+// chips
+const rc=$('#rchips');function chips(){rc.innerHTML='<button class="chip '+(filter?'':'on')+'" data-f="">Бүгд</button>'+R.map(r=>'<button class="chip '+(filter===r.id?'on':'')+'" data-f="'+r.id+'"><span class="dot" style="background:'+r.c+'"></span>'+r.id+'</button>').join('')}
+rc.onclick=e=>{const f=e.target.closest('[data-f]');if(!f)return;filter=f.dataset.f||null;chips()};chips();
+$('#rgrid').innerHTML=R.map(r=>'<div class="card" style="border-top:5px solid '+r.c+'"><b>'+r.id+'</b> '+esc(r.n)+'<div class="mut">Дундаж: '+r.m+' мин · Зай: '+r.i+' мин</div><button class="btn o" style="margin-top:8px" data-g="'+r.id+'">Газрын зураг дээр</button></div>').join('');
+$('#rgrid').onclick=e=>{const g=e.target.dataset.g;if(g){filter=g;chips();document.getElementById('map-s').scrollIntoView()}};
+// my location
+function setMe(x,y){me={x,y};pin.setAttribute('transform','translate('+x+','+y+')');pin.style.display='';let best=null,bd=1e9;B.forEach(b=>{const d=Math.hypot(b.x-x,b.y-y);if(d<bd){bd=d;best=b}});if(best)$('#nearest').textContent='Хамгийн ойр: '+best.r.id+' · '+best.plate+' · ~'+Math.max(1,Math.round(bd/40))+' мин'}
+map.addEventListener('click',e=>{const pt=map.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const q=pt.matrixTransform(map.getScreenCTM().inverse());setMe(q.x,q.y)});
+$('#loc').onclick=()=>{if(navigator.geolocation)navigator.geolocation.getCurrentPosition(()=>setMe(400+Math.random()*60,250+Math.random()*40),()=>setMe(430,260),{timeout:4000});else setMe(430,260)};
+// kids
+let kids=load('kids',[]);const kb=$('#kbus');kb.innerHTML=B.map(b=>'<option value="'+b.id+'">'+b.r.id+' · '+b.plate+'</option>').join('');
+function rk(){$('#klist').innerHTML=kids.map((k,i)=>{const b=B[k.bus];return '<div class="row it"><span class="tag">👦 '+esc(k.name)+'</span><span><span class="dot" style="background:'+b.r.c+'"></span>'+b.r.id+' '+b.plate+'</span><span class="ok" data-e="'+i+'"></span><button class="btn o" data-m="'+k.bus+'">Харах</button><button class="btn o" data-x="'+i+'">Буулгах</button></div>'}).join('')||'<div class="mut">Хүүхэд автобусанд суусны дараа энд харагдана</div>';save('kids',kids)}
+$('#kadd').onclick=()=>{const n=$('#kname').value.trim();if(!n)return;kids.push({name:n,bus:+kb.value});$('#kname').value='';rk()};
+$('#klist').onclick=e=>{const t=e.target;if(t.dataset.x!==undefined){kids.splice(+t.dataset.x,1);rk()}if(t.dataset.m!==undefined){const b=B[+t.dataset.m];filter=b.r.id;chips();document.getElementById('map-s').scrollIntoView()}};
+setInterval(()=>document.querySelectorAll('[data-e]').forEach(s=>{const k=kids[+s.dataset.e];if(k)s.textContent='Очих хүртэл ~'+eta(B[k.bus])+' мин'}),1000);rk();
+// planner
+const DN=['Да','Мя','Лх','Пү','Ба','Бя','Ня'],now0=new Date(),mon=new Date(now0);mon.setDate(now0.getDate()-((now0.getDay()+6)%7));
+const days=[...Array(7)].map((_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return {k:d.toISOString().slice(0,10),l:DN[i]+' '+d.getDate()}});
+let cur=days[(now0.getDay()+6)%7].k,plan=load('plan',{});
+function rp(){$('#days').innerHTML=days.map(d=>'<button class="chip '+(d.k===cur?'on':'')+'" data-d="'+d.k+'">'+d.l+'</button>').join('');
+const L=(plan[cur]||[]).sort((a,b)=>a.t.localeCompare(b.t));
+$('#items').innerHTML=L.map(x=>'<div class="row it"><input type="checkbox" '+(x.d?'checked':'')+' data-c="'+x.id+'"><input type="time" value="'+x.t+'" data-t="'+x.id+'"><input type="text" value="'+esc(x.x)+'" data-x="'+x.id+'"><button class="btn o" data-r="'+x.id+'">✕</button></div>').join('')||'<div class="mut">Энэ өдөр хоосон</div>';save('plan',plan)}
+$('#days').onclick=e=>{if(e.target.dataset.d){cur=e.target.dataset.d;rp()}};
+const find=id=>(plan[cur]||[]).find(x=>x.id==id);
+$('#items').onchange=e=>{const t=e.target,d=t.dataset,x=find(d.c||d.t||d.x);if(!x)return;if(d.c)x.d=t.checked;if(d.t)x.t=t.value;if(d.x)x.x=t.value;rp()};
+$('#items').onclick=e=>{const id=e.target.dataset.r;if(id){plan[cur]=plan[cur].filter(x=>x.id!=id);rp()}};
+$('#padd').onclick=()=>{const v=$('#px').value.trim();if(!v)return;(plan[cur]=plan[cur]||[]).push({id:Date.now(),t:$('#pt').value||'08:00',x:v,d:false});$('#px').value='';rp()};rp();
+// taxi pool
+let tg=load('taxi',[{id:1,f:'Хабитат',t:'1-р сургууль',tm:'07:45',cap:4,m:['Бат','Сараа'],c:[]},{id:2,f:'Баян тал',t:'5-р сургууль',tm:'07:30',cap:3,m:['Тэмүүлэн'],c:[]}]);
+function rt(){$('#tlist').innerHTML=tg.map(g=>{const ok=g.m.length>=2,full=g.m.length>=g.cap;return '<div class="card" style="margin-bottom:10px"><b>'+esc(g.f)+' → '+esc(g.t)+'</b> <span class="mut">'+esc(g.tm)+'</span><div>'+g.m.map(m=>'<span class="tag">👦 '+esc(m)+'</span>').join('')+'<span class="mut"> '+g.m.length+'/'+g.cap+'</span></div><div class="'+(ok?'ok':'mut')+'">'+(ok?'🚕 Такси баталгаажсан':'Дор хаяж 2 хүүхэд хэрэгтэй')+'</div><div class="row"><button class="btn g" data-j="'+g.id+'" '+(full?'disabled':'')+'>Нэгдэх</button><button class="btn o" data-l="'+g.id+'">Гарах</button></div><div class="msgs">'+g.c.map(c=>'<div><b>'+esc(c.n)+':</b> '+esc(c.x)+'</div>').join('')+'</div><div class="row"><input data-i="'+g.id+'" placeholder="Эцэг эхтэй холбогдох..."><button class="btn o" data-s="'+g.id+'">Илгээх</button></div></div>'}).join('');save('taxi',tg)}
+const myN=()=>$('#tme').value.trim();
+$('#tadd').onclick=()=>{const n=myN(),f=$('#tf').value.trim(),t=$('#tt').value.trim();if(!n||!f||!t)return;tg.push({id:Date.now(),f,t,tm:$('#ttm').value,cap:+$('#tc').value,m:[n],c:[]});rt()};
+$('#tlist').onclick=e=>{const d=e.target.dataset,g=tg.find(x=>x.id==(d.j||d.l||d.s));if(!g)return;
+if(d.j){const n=myN();if(!n){alert('Хүүхдийн нэрээ бичнэ үү');return}if(g.m.length<g.cap&&!g.m.includes(n))g.m.push(n)}
+if(d.l){g.m=g.m.filter(m=>m!==myN())}
+if(d.s){const i=document.querySelector('[data-i="'+g.id+'"]'),v=i.value.trim();if(!v)return;g.c.push({n:myN()||'Эцэг эх',x:v})}rt()};rt();
+requestAnimationFrame(tick);
+</script></body></html>
